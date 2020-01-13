@@ -51,8 +51,27 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        new_node = LinkedPair(key, value) # initializing a new node
+        head = self.storage[self._hash_mod(key)]
+        node = head
 
+        if not head:
+            self.storage[self._hash_mod(key)] = new_node # if a no hash is available at that key, create one via a new node
+
+        if head.key == key: # if the hash exists at that key, override it with new hash value
+            new_node.next = head.next # assigning the old head's next to new head
+            self.storage[self._hash_mod(key)] = new_node # head becomes new node
+        else:
+            while node:
+                if not node.next: # if next does not exist, next becomes the new node
+                    node.next = new_node
+                    break
+                elif node.next.key == key:
+                    new_node.next = node.next.next
+                    node.next = node_node
+                    break
+                else:
+                    node = node.next
 
 
     def remove(self, key):
@@ -63,7 +82,25 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        node = self.storage[self._hash_mod(key)]
+        count = 0
+        while node:
+            if count == 0: # if key is first node
+                count += 1
+                if node.key == key:
+                    self.storage[self._hash_mod(key)] = node.next # pointer will look at node.next
+                    break
+            elif count > 0: # if the key is in the LL, find key and make the prev node point to node.next
+                if node.next:
+                    if node.next.key == key:
+                        node.next = node.next.next
+                        break
+                    else:
+                        node = node.next
+                else:
+                    return
+        return
+        
 
 
     def retrieve(self, key):
