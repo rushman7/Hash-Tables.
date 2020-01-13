@@ -111,7 +111,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        node = self.storage[self._hash_mod(key)]
+        while node: # check that key exists in the hash
+            if node.key == key: # if key is found return it
+                return node.value
+            else:
+                node = node.next # else move to the next node in LL until key is found
+        return None # return None if it does not exist
 
 
     def resize(self):
