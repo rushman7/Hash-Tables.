@@ -51,27 +51,28 @@ class HashTable:
 
         Fill this in.
         '''
-        new_node = LinkedPair(key, value) # initializing a new node
-        head = self.storage[self._hash_mod(key)]
+        new_node = LinkedPair(key, value) 
+        hm_key = self._hash_mod(key)
+        head = self.storage[hm_key]
         node = head
 
         if not head:
             self.storage[self._hash_mod(key)] = new_node # if a no hash is available at that key, create one via a new node
-
-        if head.key == key: # if the hash exists at that key, override it with new hash value
-            new_node.next = head.next # assigning the old head's next to new head
-            self.storage[self._hash_mod(key)] = new_node # head becomes new node
         else:
-            while node:
-                if not node.next: # if next does not exist, next becomes the new node
-                    node.next = new_node
-                    break
-                elif node.next.key == key:
-                    new_node.next = node.next.next
-                    node.next = node_node
-                    break
-                else:
-                    node = node.next
+            if head.key == key: # if the hash exists at that key, override it with new hash value
+                new_node.next = head.next # assigning the old head's next to new head
+                self.storage[self._hash_mod(key)] = new_node # head becomes new node
+            else:
+                while node:
+                    if not node.next: # if next does not exist, next becomes the new node
+                        node.next = new_node
+                        break
+                    elif node.next.key == key: # if next key is the key node.next becomes node
+                        new_node.next = node.next.next
+                        node.next = new_node
+                        break
+                    else: # else move to the next node in LL
+                        node = node.next
 
 
     def remove(self, key):
@@ -127,7 +128,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity = self.capacity * 2 # multiply size by 2
+        new_ht = HashTable(self.capacity) # new hash table with new 2x capacity
+        for bucket in self.storage: # loop through all buckets in hash
+            while bucket: # while each node exists
+                new_ht.insert(bucket.key, bucket.value) # insert each node in the LL at its curr position into new hash
+                bucket = bucket.next # move to next node and repeat until we reach end of linked list for this hash
+        self.storage = new_ht.storage
+
 
 
 
